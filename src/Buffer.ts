@@ -78,6 +78,11 @@ export class Buffer implements IBuffer {
   public resize(newCols: number, newRows: number): void {
     // Don't resize the buffer if it's empty and hasn't been used yet.
     if (this._lines.length === 0) {
+      // RSTUDIO: if terminal resizes before alt-buffer shown, then it will think it still
+      // has 25 rows if we don't do this: https://github.com/rstudio/rstudio/issues/1875
+      this.scrollTop = 0;
+      this.scrollBottom = newRows - 1;
+      // END RSTUDIO
       return;
     }
 
